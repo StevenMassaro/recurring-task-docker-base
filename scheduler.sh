@@ -5,6 +5,6 @@ while :; do
 
     eval "$command"
 
-    echo "$(date) - sleep for 1 day"
-    sleep 1d
+    echo "$(date) - sleep for ${delay:-1d}"
+    sleep "${delay:-1d}"
 done
