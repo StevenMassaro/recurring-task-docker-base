@@ -10,6 +10,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v3
         with:
@@ -26,7 +27,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - uses: actions/checkout@v3
       - name: Determine alpine version
         id: version
         run: echo "VERSION=$(head Dockerfile -n 1 | cut -d ':' -f2)" >> $GITHUB_OUTPUT
