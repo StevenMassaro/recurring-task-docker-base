@@ -29,3 +29,10 @@ jobs:
           tags: |
             stevenmassaro/scheduled-task-base:latest
             stevenmassaro/scheduled-task-base:${{ steps.version.outputs.VERSION }}
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: peterevans/dockerhub-description
+          short-description: ${{ github.event.repository.description }}
