@@ -19,7 +19,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Determine alpine version
         id: version
         run: echo "VERSION=$(head Dockerfile -n 1 | cut -d ':' -f2)" >> $GITHUB_OUTPUT
