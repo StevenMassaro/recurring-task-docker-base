@@ -3,8 +3,8 @@ echo "$(date) - start scheduler"
 while :; do
     echo "$(date) - execute"
 
-    eval "$command"
+    eval "$COMMAND"
 
-    echo "$(date) - sleep for ${delay:-1d}"
-    sleep "${delay:-1d}"
+    echo "$(date) - sleep for ${DELAY:-1d}"
+    sleep "${DELAY:-1d}"
 done
