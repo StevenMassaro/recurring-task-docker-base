@@ -26,7 +26,7 @@ jobs:
           DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
         with:
-          destination_container_repo: stevenmassaro/scheduled-task-base
+          destination_container_repo: stevenmassaro/recurring-task-base
           provider: dockerhub
           short_description: ${{ github.event.repository.description }}
           readme_file: 'README.md'
@@ -38,5 +38,5 @@ jobs:
         with:
           push: true
           tags: |
-            stevenmassaro/scheduled-task-base:latest
-            stevenmassaro/scheduled-task-base:${{ steps.version.outputs.VERSION }}
+            stevenmassaro/recurring-task-base:latest
+            stevenmassaro/recurring-task-base:${{ steps.version.outputs.VERSION }}

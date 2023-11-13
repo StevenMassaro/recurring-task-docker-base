@@ -1,9 +1,9 @@
-# Scheduled Task Docker Base
+# Recurring Task Docker Base
 
-![ci](https://github.com/StevenMassaro/scheduled-task-docker-base/actions/workflows/build.yml/badge.svg)
-[![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://hub.docker.com/r/stevenmassaro/scheduled-task-base)
+![ci](https://github.com/StevenMassaro/recurring-task-docker-base/actions/workflows/build.yml/badge.svg)
+[![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://hub.docker.com/r/stevenmassaro/recurring-task-base)
 
-A simple Docker image that runs a command with a specified delay.
+A simple Docker image that repeatedly runs a command with a specified delay.
 
 ## Usage
 
