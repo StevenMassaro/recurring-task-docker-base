@@ -1,4 +1,4 @@
-FROM alpine:3.17
+FROM alpine:3.19
 
 ARG SCRIPT=scheduler.sh
 COPY $SCRIPT $SCRIPT
