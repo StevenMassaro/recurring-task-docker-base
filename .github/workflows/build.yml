@@ -33,10 +33,13 @@ jobs:
       - name: Determine alpine version
         id: version
         run: echo "VERSION=$(head Dockerfile -n 1 | cut -d ':' -f2)" >> $GITHUB_OUTPUT
+      - name: Determine local version
+        id: local-version
+        run: echo "LOCAL_VERSION=$(head version.txt -n 1)" >> $GITHUB_OUTPUT
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           push: true
           tags: |
             stevenmassaro/recurring-task-base:latest
-            stevenmassaro/recurring-task-base:${{ steps.version.outputs.VERSION }}
+            stevenmassaro/recurring-task-base:v${{ steps.local-version.outputs.LOCAL_VERSION}}-alpine-${{ steps.version.outputs.VERSION }}
