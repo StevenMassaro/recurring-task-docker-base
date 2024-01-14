@@ -42,4 +42,4 @@ jobs:
           push: true
           tags: |
             stevenmassaro/recurring-task-base:latest
-            stevenmassaro/recurring-task-base:v${{ steps.local-version.outputs.LOCAL_VERSION}}-alpine-${{ steps.version.outputs.VERSION }}
+            stevenmassaro/recurring-task-base:v${{ steps.local-version.outputs.LOCAL_VERSION}}.${{ steps.version.outputs.VERSION }}
