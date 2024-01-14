@@ -11,11 +11,13 @@ A simple Docker image that repeatedly runs a command with a specified delay.
 
 #### Environment variables:
 
-| Name      | Required | Default value | Example value                                                 |
-|-----------|----------|---------------|---------------------------------------------------------------|
-| `COMMAND` | Yes      |               | `echo Hello`                                                  |
-| `DELAY`   | No       | `1d`          | `7d` (or any other permissible value for the `sleep` command) |
+| Name            | Required | Default value | Example value                                                 | Description                                     |
+|-----------------|----------|---------------|---------------------------------------------------------------|-------------------------------------------------|
+| `COMMAND`       | Yes      |               | `echo Hello`                                                  |                                                 |
+| `AFTER_COMMAND` | No       |               | `echo Hello after`                                            | Command that should be executed after `COMMAND` |
+| `DELAY`         | No       | `1d`          | `7d` (or any other permissible value for the `sleep` command) |                                                 |
 
 ### As the base image of another project
 
-See [this project](https://github.com/StevenMassaro/cuofco-mortgage-rate-check/blob/main/Dockerfile) for an example of how to use this image as your base docker image.
+See [this project](https://github.com/StevenMassaro/cuofco-mortgage-rate-check/blob/main/Dockerfile) for an example of
+how to use this image as your base docker image.
