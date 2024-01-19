@@ -4,10 +4,16 @@ while :; do
     echo "$(date) - execute"
 
     eval "$COMMAND"
+    ret=$?
 
     if [[ ! -z "$AFTER_COMMAND" ]]
     then
-        eval "$AFTER_COMMAND"
+        if [ $ret -ne 0 ];
+        then
+            echo "$(date) - command failed with exit code $ret, not executing AFTER_COMMAND"
+        else
+            eval "$AFTER_COMMAND"
+        fi
     fi
 
     echo "$(date) - sleep for ${DELAY:-1d}"
