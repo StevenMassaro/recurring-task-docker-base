@@ -6,7 +6,7 @@ while :; do
     eval "$COMMAND"
     ret=$?
 
-    if [[ ! -z "$AFTER_COMMAND" ]]
+    if [ -n "$AFTER_COMMAND" ]
     then
         if [ $ret -ne 0 ];
         then
