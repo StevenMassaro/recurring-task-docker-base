@@ -1,7 +1,7 @@
 FROM alpine:3.19
 
 ARG SCRIPT=scheduler.sh
-COPY $SCRIPT $SCRIPT
+COPY src/$SCRIPT $SCRIPT
 
 RUN apk add --no-cache --update dos2unix && \
     dos2unix $SCRIPT && \
