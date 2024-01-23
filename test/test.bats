@@ -44,5 +44,6 @@ setup() {
     export AFTER_COMMAND="echo hello1"
     run execute.sh
     assert_output --partial 'elkajsd: command not found'
+    assert_output --partial 'command failed with exit code 127, not executing AFTER_COMMAND'
     refute_output 'hello1'
 }
