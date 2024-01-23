@@ -19,6 +19,8 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: actions/checkout@v4
+        with:
+          submodules: true
       - name: Setup Bats and bats libs
         uses: bats-core/bats-action@1.5.4
       - name: Test
