@@ -22,7 +22,7 @@ jobs:
         with:
           submodules: true
       - name: Setup Bats and bats libs
-        uses: bats-core/bats-action@1.5.4
+        uses: bats-core/bats-action@1.5.5
       - name: Test
         run: bats test/test.bats
       - name: Push README to Dockerhub
