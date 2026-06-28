@@ -11,12 +11,14 @@ A simple Docker image that repeatedly runs a command with a specified delay.
 
 #### Environment variables:
 
-| Name                 | Required | Default value | Example value                                                 | Description                                                                                                                                                  |
-|----------------------|----------|---------------|---------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `COMMAND`            | Yes      |               | `echo Hello`                                                  |                                                                                                                                                              |
-| `AFTER_COMMAND`      | No       |               | `echo Hello after`                                            | Command that should be executed after `COMMAND`                                                                                                              |
-| `DELAY`              | No       | `1d`          | `7d` (or any other permissible value for the `sleep` command) |                                                                                                                                                              |
-| `ADJUST_FOR_RUNTIME` | No       | `true`        | `false`                                                       | If set to true, subtracts the execution time of the task from the delay, ensuring the scheduler runs at consistent intervals (e.g., the same time each day). |
+| Name                 | Required | Default value       | Example value                                                 | Description                                                                                                                                                  |
+|----------------------|----------|---------------------|---------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `COMMAND`            | Yes      |                     | `echo Hello`                                                  |                                                                                                                                                              |
+| `AFTER_COMMAND`      | No       |                     | `echo Hello after`                                            | Command that should be executed after `COMMAND`                                                                                                              |
+| `DELAY`              | No       | `1d`                | `7d` (or any other permissible value for the `sleep` command) |                                                                                                                                                              |
+| `ADJUST_FOR_RUNTIME` | No       | `true`              | `false`                                                       | If set to true, subtracts the execution time of the task from the delay, ensuring the scheduler runs at consistent intervals (e.g., the same time each day). |
+| `CHECK_LAST_RUNTIME` | No       | `false`             | `true`                                                        | If set to true, checks when the task last ran and waits if needed to ensure the specified delay has passed since the last execution.                         |
+| `LAST_RUNTIME_FILE`  | No       | `/tmp/last_runtime` | `/var/log/last_runtime`                                 | File to store the timestamp of the last execution when CHECK_LAST_RUNTIME is enabled.                                                                        |
 
 ### As the base image of another project
 
