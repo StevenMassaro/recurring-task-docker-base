@@ -49,3 +49,4 @@ jobs:
           tags: |
             stevenmassaro/recurring-task-base:latest
             stevenmassaro/recurring-task-base:v${{ steps.local-version.outputs.LOCAL_VERSION}}.${{ steps.version.outputs.VERSION }}
+          platforms: linux/amd64,linux/arm64
