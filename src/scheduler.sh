@@ -1,6 +1,20 @@
 #!/bin/sh
 echo "$(date) - start scheduler"
 
+# Healthchecks.io integration
+if [ -n "$HEALTHCHECKS_URL" ]; then
+    HEALTHCHECKS_START_URL="${HEALTHCHECKS_URL}/start"
+    HEALTHCHECKS_SUCCESS_URL="${HEALTHCHECKS_URL}"
+    HEALTHCHECKS_FAIL_URL="${HEALTHCHECKS_URL}/fail"
+fi
+
+hc_ping() {
+    local url="$1"
+    if [ -n "$HEALTHCHECKS_URL" ]; then
+        curl -fsS --max-time 10 "$url" >/dev/null 2>&1 || true
+    fi
+}
+
 # Convert a duration like "1d" or "3600" into seconds
 duration_to_seconds() {
     case "$1" in
@@ -18,6 +32,11 @@ CHECK_LAST_RUNTIME="${CHECK_LAST_RUNTIME:-false}"
 LAST_RUNTIME_FILE="${LAST_RUNTIME_FILE:-/tmp/last_runtime}"
 
 while :; do
+    # Send start ping if HEALTHCHECKS_URL is set
+    if [ -n "$HEALTHCHECKS_URL" ]; then
+        hc_ping "$HEALTHCHECKS_START_URL"
+    fi
+
     echo "$(date) - execute"
 
     # If CHECK_LAST_RUNTIME is enabled, check when we last ran and wait if needed
@@ -42,6 +61,7 @@ while :; do
 
     start_time=$(date +%s)
     ./execute.sh
+    exit_code=$?
     end_time=$(date +%s)
 
     # Update the last runtime file

@@ -19,6 +19,7 @@ A simple Docker image that repeatedly runs a command with a specified delay.
 | `ADJUST_FOR_RUNTIME` | No       | `true`              | `false`                                                       | If set to true, subtracts the execution time of the task from the delay, ensuring the scheduler runs at consistent intervals (e.g., the same time each day). |
 | `CHECK_LAST_RUNTIME` | No       | `false`             | `true`                                                        | If set to true, checks when the task last ran and waits if needed to ensure the specified delay has passed since the last execution.                         |
 | `LAST_RUNTIME_FILE`  | No       | `/tmp/last_runtime` | `/var/log/last_runtime`                                 | File to store the timestamp of the last execution when CHECK_LAST_RUNTIME is enabled.                                                                        |
+| `HEALTHCHECKS_URL`   | No       |                     | `https://hc-ping.com/your-uuid`                           | If set, sends ping to healthchecks.io before and after the main command (success or fail).                                                                  |
 
 ### As the base image of another project
 
