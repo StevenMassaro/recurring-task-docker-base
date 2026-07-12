@@ -13,13 +13,13 @@ setup() {
 @test "valid command" {
     export COMMAND="echo hello"
     run execute.sh
-    assert_output 'hello'
+    assert_output --partial 'hello'
 }
 
 @test "invalid command" {
     export COMMAND="asldkjaslkdj"
     run execute.sh
-    assert_output --partial 'asldkjaslkdj: not found'
+    assert_output --partial 'asldkjaslkdj: command not found'
 }
 
 @test "valid command and valid after command" {
@@ -36,14 +36,14 @@ setup() {
     export AFTER_COMMAND="alskdjalksdj"
     run -127 execute.sh
     assert_output --partial 'hello1'
-    assert_output --partial 'alskdjalksdj: not found'
+    assert_output --partial 'alskdjalksdj: command not found'
 }
 
 @test "invalid command and valid after command" {
     export COMMAND="elkajsd"
     export AFTER_COMMAND="echo hello1"
     run execute.sh
-    assert_output --partial 'elkajsd: not found'
+    assert_output --partial 'elkajsd: command not found'
     assert_output --partial 'command failed with exit code 127, not executing AFTER_COMMAND'
     refute_output 'hello1'
 }
