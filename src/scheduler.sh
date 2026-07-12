@@ -32,11 +32,6 @@ CHECK_LAST_RUNTIME="${CHECK_LAST_RUNTIME:-false}"
 LAST_RUNTIME_FILE="${LAST_RUNTIME_FILE:-/tmp/last_runtime}"
 
 while :; do
-    # Send start ping if HEALTHCHECKS_URL is set
-    if [ -n "$HEALTHCHECKS_URL" ]; then
-        hc_ping "$HEALTHCHECKS_START_URL"
-    fi
-
     echo "$(date) - execute"
 
     # If CHECK_LAST_RUNTIME is enabled, check when we last ran and wait if needed
@@ -60,6 +55,10 @@ while :; do
     fi
 
     start_time=$(date +%s)
+    # Send start ping if HEALTHCHECKS_URL is set
+    if [ -n "$HEALTHCHECKS_URL" ]; then
+        hc_ping "$HEALTHCHECKS_START_URL"
+    fi
     ./execute.sh
     exit_code=$?
     end_time=$(date +%s)
