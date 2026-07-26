@@ -10,11 +10,7 @@ if [ -n "$HEALTHCHECKS_URL" ]; then
         local url="$1"
         curl -fsS --max-time 10 "$url" >/dev/null 2>&1 || true
     }
-    if [ $ret -eq 0 ]; then
-        hc_ping "$HEALTHCHECKS_SUCCESS_URL"
-    else
-        hc_ping "$HEALTHCHECKS_FAIL_URL"
-    fi
+    hc_ping "$HEALTHCHECKS_SUCCESS_URL/$ret"
 fi
 
 if [ -n "$AFTER_COMMAND" ]
