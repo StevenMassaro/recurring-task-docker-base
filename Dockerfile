@@ -3,7 +3,7 @@ FROM alpine:3.23
 ARG SCRIPT=*.sh
 COPY src/$SCRIPT .
 
-RUN apk add --no-cache --update dos2unix curl && \
+RUN apk add --no-cache --update dos2unix curl tzdata && \
     dos2unix $SCRIPT && \
     apk del dos2unix && \
     chmod +x $SCRIPT
