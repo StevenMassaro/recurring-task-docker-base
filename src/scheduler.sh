@@ -44,7 +44,7 @@ while :; do
 
             if [ "$time_since_last_runtime" -lt "$delay_seconds" ]; then
                 sleep_time=$(( delay_seconds - time_since_last_runtime ))
-                echo "$(date) - Last runtime was $time_since_last_runtime seconds ago, sleeping for $sleep_time seconds to reach $DELAY interval"
+                echo "$(date) - Last runtime was $time_since_last_runtime seconds ago, sleeping for $sleep_time seconds to reach $DELAY interval; will run at $(date -d "@$(( $(date +%s) + $sleep_time ))")"
                 sleep "$sleep_time"
             else
                 echo "$(date) - Last runtime was $time_since_last_runtime seconds ago (>= $DELAY), not sleeping"
@@ -78,6 +78,6 @@ while :; do
         sleep_time=$delay_seconds
     fi
 
-    echo "$(date) - sleeping for $sleep_time seconds"
+    echo "$(date) - sleeping for $sleep_time seconds; will run at $(date -d "@$(( $(date +%s) + $sleep_time ))")"
     sleep "$sleep_time"
 done
