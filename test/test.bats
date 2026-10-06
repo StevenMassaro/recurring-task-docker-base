@@ -48,6 +48,102 @@ setup() {
     refute_output 'hello1'
 }
 
+@test "default RETRIES does not retry a failed command" {
+    attempts_file="/tmp/execute-retries-default-$BATS_TEST_NUMBER"
+    rm -f "$attempts_file"
+    export ATTEMPTS_FILE="$attempts_file"
+    export COMMAND='attempts=$(cat "$ATTEMPTS_FILE" 2>/dev/null || echo 0); attempts=$((attempts + 1)); echo "$attempts" > "$ATTEMPTS_FILE"; false'
+
+    run execute.sh
+    [ "$status" -eq 1 ]
+    run cat "$attempts_file"
+    assert_output '1'
+}
+
+@test "retries stop after the command succeeds" {
+    attempts_file="/tmp/execute-retries-success-$BATS_TEST_NUMBER"
+    rm -f "$attempts_file"
+    export ATTEMPTS_FILE="$attempts_file"
+    export RETRIES=3
+    export RETRY_BACKOFF=0
+    export COMMAND='attempts=$(cat "$ATTEMPTS_FILE" 2>/dev/null || echo 0); attempts=$((attempts + 1)); echo "$attempts" > "$ATTEMPTS_FILE"; [ "$attempts" -ge 3 ]'
+    export AFTER_COMMAND='echo after'
+
+    run execute.sh
+    [ "$status" -eq 0 ]
+    assert_output --partial 'after'
+    run cat "$attempts_file"
+    assert_output '3'
+}
+
+@test "retries return the final failure and skip AFTER_COMMAND" {
+    attempts_file="/tmp/execute-retries-failure-$BATS_TEST_NUMBER"
+    rm -f "$attempts_file"
+    export ATTEMPTS_FILE="$attempts_file"
+    export RETRIES=2
+    export RETRY_BACKOFF=0
+    export COMMAND='attempts=$(cat "$ATTEMPTS_FILE" 2>/dev/null || echo 0); attempts=$((attempts + 1)); echo "$attempts" > "$ATTEMPTS_FILE"; sh -c "exit 7"'
+    export AFTER_COMMAND='echo should-not-run'
+
+    run execute.sh
+    [ "$status" -eq 7 ]
+    assert_output --partial 'attempt 1 of 2'
+    assert_output --partial 'attempt 2 of 2'
+    refute_output --partial 'should-not-run'
+    run cat "$attempts_file"
+    assert_output '3'
+}
+
+@test "retries use exponential backoff" {
+    mock_bin="/tmp/execute-retries-backoff-bin-$BATS_TEST_NUMBER"
+    sleep_log="/tmp/execute-retries-backoff-$BATS_TEST_NUMBER"
+    rm -rf "$mock_bin" "$sleep_log"
+    mkdir -p "$mock_bin"
+    cat > "$mock_bin/sleep" <<'EOF'
+#!/bin/sh
+printf '%s\n' "$1" >> "$SLEEP_LOG"
+EOF
+    chmod +x "$mock_bin/sleep"
+    export PATH="$mock_bin:$PATH"
+    export SLEEP_LOG="$sleep_log"
+    export RETRIES=2
+    export RETRY_BACKOFF=2
+    export COMMAND='sh -c "exit 1"'
+
+    run execute.sh
+    [ "$status" -eq 1 ]
+    run cat "$sleep_log"
+    assert_output '2
+4'
+}
+
+@test "healthchecks are pinged for every command attempt" {
+    mock_bin="/tmp/execute-retries-healthchecks-bin-$BATS_TEST_NUMBER"
+    attempts_file="/tmp/execute-retries-healthchecks-attempts-$BATS_TEST_NUMBER"
+    curl_log="/tmp/execute-retries-healthchecks-pings-$BATS_TEST_NUMBER"
+    rm -rf "$mock_bin" "$attempts_file" "$curl_log"
+    mkdir -p "$mock_bin"
+    cat > "$mock_bin/curl" <<'EOF'
+#!/bin/sh
+printf '%s\n' "$4" >> "$CURL_LOG"
+EOF
+    chmod +x "$mock_bin/curl"
+    export PATH="$mock_bin:$PATH"
+    export CURL_LOG="$curl_log"
+    export HEALTHCHECKS_URL='https://healthchecks.test/uuid'
+    export ATTEMPTS_FILE="$attempts_file"
+    export RETRIES=3
+    export RETRY_BACKOFF=0
+    export COMMAND='attempts=$(cat "$ATTEMPTS_FILE" 2>/dev/null || echo 0); attempts=$((attempts + 1)); echo "$attempts" > "$ATTEMPTS_FILE"; [ "$attempts" -ge 3 ]'
+
+    run execute.sh
+    [ "$status" -eq 0 ]
+    run cat "$curl_log"
+    assert_output "${HEALTHCHECKS_URL}/1
+${HEALTHCHECKS_URL}/1
+${HEALTHCHECKS_URL}/0"
+}
+
 @test "CHECK_LAST_RUNTIME with recent last runtime sleeps" {
     export CHECK_LAST_RUNTIME=true
     export ADJUST_FOR_RUNTIME=false
