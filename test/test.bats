@@ -117,7 +117,7 @@ EOF
 4'
 }
 
-@test "healthchecks are pinged for every command attempt" {
+@test "healthchecks are pinged after retries finish" {
     mock_bin="/tmp/execute-retries-healthchecks-bin-$BATS_TEST_NUMBER"
     attempts_file="/tmp/execute-retries-healthchecks-attempts-$BATS_TEST_NUMBER"
     curl_log="/tmp/execute-retries-healthchecks-pings-$BATS_TEST_NUMBER"
@@ -139,9 +139,7 @@ EOF
     run execute.sh
     [ "$status" -eq 0 ]
     run cat "$curl_log"
-    assert_output "${HEALTHCHECKS_URL}/1
-${HEALTHCHECKS_URL}/1
-${HEALTHCHECKS_URL}/0"
+    assert_output "${HEALTHCHECKS_URL}/0"
 }
 
 @test "CHECK_LAST_RUNTIME with recent last runtime sleeps" {

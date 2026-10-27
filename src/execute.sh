@@ -2,7 +2,7 @@
 RETRIES="${RETRIES:-0}"
 RETRY_BACKOFF="${RETRY_BACKOFF:-0}"
 
-# Healthchecks.io integration: ping based on each COMMAND attempt, before AFTER_COMMAND
+# Healthchecks.io integration: ping based on the final COMMAND result, before AFTER_COMMAND
 if [ -n "$HEALTHCHECKS_URL" ]; then
     HEALTHCHECKS_SUCCESS_URL="${HEALTHCHECKS_URL}"
     hc_ping() {
@@ -18,10 +18,6 @@ do
     eval "$COMMAND"
     ret=$?
 
-    if [ -n "$HEALTHCHECKS_URL" ]; then
-        hc_ping "$HEALTHCHECKS_SUCCESS_URL/$ret"
-    fi
-
     if [ "$ret" -eq 0 ] || [ "$retry_count" -ge "$RETRIES" ]; then
         break
     fi
@@ -31,6 +27,10 @@ do
     sleep "$retry_delay"
     retry_delay=$((retry_delay * 2))
 done
+
+if [ -n "$HEALTHCHECKS_URL" ]; then
+    hc_ping "$HEALTHCHECKS_SUCCESS_URL/$ret"
+fi
 
 if [ -n "$AFTER_COMMAND" ]
 then
